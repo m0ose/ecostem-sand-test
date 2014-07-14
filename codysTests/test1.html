@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+        <!-- traceur compiler -->
+        <script src="../lib/traceur/traceur.js"></script>
+        <!-- in-browser bootstrap for traceur -->
+        <script src="../lib/traceur/bootstrap.js"></script>
+
+
+        <script src="../lib/underscore.js"></script>
+        <script src="../lib/jquery-1.10.2.js"></script>
+
+        <script type="module">
+            import {ScanElevationModel, ScanElevationPatchRenderer} from '../js/ScanElevationModel';
+            import {Correspondence} from '../js/Correspondence';
+
+            var can = document.getElementById('canibus')
+            can.width = window.innerWidth
+            can.height = window.innerHeight
+
+
+            window.scan = new Correspondence()
+            scan.stripeScan.lightStripeColor = "#fff"
+            scan.stripeScan.disableThreshold = 0.1
+
+            scan.calibrationFlatScan(document.getElementById('canibus')
+            , (a,b)=>{ console.log('done',a,b)  }
+            , ()=>{ console.log('FAIL')  }
+            )
+
+        </script>
+    </head>
+    <body>
+        <div class="app"></div>
+        <canvas width=400 height=400 id='canibus'><canvas>
+    </body>
+</html>

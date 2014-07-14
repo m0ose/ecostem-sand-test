@@ -6,7 +6,7 @@ export var Config = {
     vertFrames : 7,
     horizFrames : 7,
     /* Any HTTP server serving a JPG of the scene will do */
-    cameraServer: "http://192.168.1.109:8080/shot.jpg",
-    useDummyServer: true,
-    dummyScanDir: "img/scantest-sand"
+    cameraServer: "http://127.0.0.1:8080/shot.jpg?shutter=10&gain=12",
+    useDummyServer: false,
+    dummyScanDir: "../img/scantest-sand"
 };

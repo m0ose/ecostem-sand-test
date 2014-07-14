@@ -25,6 +25,8 @@ export class StripeScan {
         this.darkStripeColor = '#000';
         this.lightStripeColor = '#888';
 
+        this.disableThreshold = 0.5;
+
         this.init();
     }
 
@@ -68,7 +70,7 @@ export class StripeScan {
                 this.computeMinMax();
                 this.processImages('vertical');
                 this.processImages('horizontal');
-                this.outputRaster.disableLowVariancePixels();
+                this.outputRaster.disableLowVariancePixels( this.disableThreshold);
                 this.invoke(doneCallback, this.outputRaster);
             });
         });

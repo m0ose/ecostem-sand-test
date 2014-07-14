@@ -1,5 +1,7 @@
 
 import {Config} from './Config';
+import '../st-api/Util/StringUtil';
+import '../st-api/Util/consoleImage';
 
 /* Dummy image loader that loads the pre-shot images from img/scantest-*.
    This is a drop-in from the image loader and doesn't require any
@@ -73,6 +75,7 @@ class RealImageLoader {
             }
             clearTimeout(timeout);
             loading = false;
+            console.localImage(img)
             if (typeof callback === 'function') {
                 callback(img);
             }
@@ -89,7 +92,12 @@ class RealImageLoader {
         };
 
         loading = true;
-        img.src = url + '?token=' + this.token++;
+        var restSeperator = '?'
+        if( url.indexOf('?')>0){
+          restSeperator='&'
+        }
+
+        img.src = url + restSeperator + 'token=' + this.token++;
 
         timeout = setTimeout(() => {
             if (loading) {

@@ -49,16 +49,16 @@ export class CameraRaster extends Raster {
         rasterCell.variance = rasterCell.max - rasterCell.min;
     }
 
-    disableLowVariancePixels() {
+    disableLowVariancePixels(threshold=0.5) {
         var reduceFun = (memo, list) => {
             return memo.concat(_.pluck(list, 'variance'));
         };
 
         var variances = _.reduce(this.data, reduceFun, []);
         variances.sort(function(x,y) { return x-y; });
-        variances = _.uniq(variances, true);
+        //variances = _.uniq(variances, true); // Not sure why to use uniq? -cody
 
-        var idx = Math.ceil(variances.length * 0.5);
+        var idx = Math.floor(variances.length * threshold);
         var middle = variances[idx];
 
         var x,y;

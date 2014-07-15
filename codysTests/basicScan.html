@@ -15,25 +15,33 @@
         <script type="module">
             import {ScanElevationModel, ScanElevationPatchRenderer} from '../js/ScanElevationModel';
             import {Correspondence} from '../js/Correspondence';
-
-            var can = document.getElementById('canibus')
-            can.width = window.innerWidth
-            can.height = window.innerHeight
-
+            import {Config} from "../js/Config"
+            import {hideCanvas, showCanvas} from "./scanHelpers"
 
             window.scan = new Correspondence()
             scan.stripeScan.lightStripeColor = "#fff"
-            scan.stripeScan.disableThreshold = 0.1
+            scan.stripeScan.disableThreshold = 0.0
+            scan.stripeScan.cameraServer =  "http://127.0.0.1:8080/shot.jpg?shutter=20&gain=12"
 
-            scan.calibrationFlatScan(document.getElementById('canibus')
-            , (a,b)=>{ console.log('done',a,b)  }
-            , ()=>{ console.log('FAIL')  }
-            )
+            document.startCalib = function(){
+              var can = showCanvas('canibus')
+              scan.calibrationFlatScan(can
+              ,(a)=>{
+                   console.log('Success. done',a)
+                   setTimeout( ()=>{
+                     hideCanvas('canibus')
+                   }  , 14000)
+                 }
+              , ()=>{ console.log('FAIL')  }
+              )
+            }
 
         </script>
+
     </head>
     <body>
         <div class="app"></div>
-        <canvas width=400 height=400 id='canibus'><canvas>
+        <button onclick="startCalib()">start calibration</button>
+        <canvas width=0 height=0 id='canibus'><canvas>
     </body>
 </html>

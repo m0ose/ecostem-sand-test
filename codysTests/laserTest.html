@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+        <!-- traceur compiler -->
+        <script src="../lib/traceur/traceur.js"></script>
+        <!-- in-browser bootstrap for traceur -->
+        <script src="../lib/traceur/bootstrap.js"></script>
+
+
+        <script src="../lib/underscore.js"></script>
+        <script src="../lib/jquery-1.10.2.js"></script>
+
+        <script type="module">
+            import {ScanElevationModel, ScanElevationPatchRenderer} from '../js/ScanElevationModel';
+            import {Correspondence} from '../js/Correspondence';
+            import {Config} from "../js/Config"
+            import {hideCanvas, showCanvas} from "./scanHelpers"
+            import {startLaser, stopLaser} from "../js/LaserHandler"
+
+            window.scan = new Correspondence()
+            scan.stripeScan.lightStripeColor = "#fff"
+            scan.stripeScan.disableThreshold = 0.0
+            scan.stripeScan.cameraServer =  "http://127.0.0.1:8080/shot.jpg?shutter=20&gain=12"
+
+            var flatResult = null
+
+            document.startCalib = function(){
+              stopLaser()
+              var can = showCanvas('canibus')
+              scan.calibrationFlatScan(can
+              ,(a)=>{
+                   console.log('Success. done',a)
+                   flatResult = a
+                   setTimeout( ()=>{
+                     hideCanvas('canibus')
+                   }  , 3000)
+                 }
+              , ()=>{ console.log('FAIL')  }
+              )
+            }
+
+            document.stopLaser2 = ()=>{
+              stopLaser()
+              }
+
+            document.startLaser2= ()=>{
+              var dv = document.getElementById('lasericon')
+              dv.style.position = 'absolute'
+
+              startLaser(
+
+                (obj)=>{
+                  if( obj.x <1 || obj.y < 1){
+                    return
+                  }
+                  var x=0
+                  var y=0
+                  if( scan.flatRaster ){
+                      var x1 = obj.x
+                      var y1 = obj.y
+                      var d1 = scan.flatRaster.data[x1][y1]
+                      x =  window.innerWidth * ( d1.x/scan.dataWidth)
+                      y = window.innerHeight * ( d1.y/scan.dataHeight)
+                  }
+                  else{
+                    x =  window.innerWidth * obj.x1
+                    y =  window.innerHeight * obj.y1
+                  }
+                  dv.style.left = x+"px"
+                  dv.style.top = y+"px"
+                }
+
+              )
+            }
+
+
+
+        </script>
+
+    </head>
+    <body>
+        <div class="app"></div>
+        <button onclick="startCalib()">start calibration</button>
+        <br><button onclick="startLaser2()">start laser</button>
+        <br><button onclick="stopLaser2()">stop Laser</button>
+
+        <canvas width=0 height=0 id='canibus'></canvas>
+        <br>
+        <img id="lasericon" src="bart.png"/>
+    </body>
+</html>

@@ -8,6 +8,6 @@ export var Config ={
     /* Any HTTP server serving a JPG of the scene will do */
     cameraServer: "http://127.0.0.1:8080/shot.jpg?shutter=10&gain=12",
     brightestPointServer : "http://127.0.0.1:8080/brightestpoint.json?shutter=4&gain=1",
-    useDummyServer: false,
+    useDummyServer: true,
     dummyScanDir: "../img/scantest-sand"
 }

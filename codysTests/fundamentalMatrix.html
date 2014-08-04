@@ -9,33 +9,52 @@
         <script src="../lib/traceur/bootstrap.js"></script>
         <script src="../lib/underscore.js"></script>
         <script src="../lib/jquery-1.10.2.js"></script>
+        <script src="../lib/Fundamental_Matrix/fundMatrix.js"></script>
+        <script src="../lib/Fundamental_Matrix/arrayMod.js"></script>
+        <script src="../lib/Fundamental_Matrix/plot.js"></script>
+
+        <script src="../lib/numeric-1.2.6.js"></script>
 
         <script type="module">
             import {ScanElevationModel, ScanElevationPatchRenderer} from '../js/ScanElevationModel';
             import {Correspondence} from '../js/Correspondence';
             import {Config} from "../js/Config"
             import {hideCanvas, showCanvas} from "./scanHelpers"
+            import {ransacFundMatrixEstimate} from "./ransacFundMatrixEstimate"
 
-            window.scan = new Correspondence()
+            function generateGaussNumber(med, sigma){
+              var g = (Math.random()*2-1) + (Math.random()*2-1) + (Math.random()*2-1)
+              return sigma*g + med
+            }
+
+
+            var scan = new Correspondence()
             scan.stripeScan.lightStripeColor = "#fff"
             scan.stripeScan.disableThreshold = 0.0
             scan.stripeScan.cameraServer =  "http://127.0.0.1:8080/shot.jpg?shutter=20&gain=12"
 
+            
+
+            function doneCalib(data){
+             
+              window.ransacky = new ransacFundMatrixEstimate(data )
+              ransacky.draw( document.getElementById('canibus'))
+
+             }
+
+
             document.startCalib = function(){
               var can = showCanvas('canibus')
               scan.calibrationFlatScan(can
-              ,(a)=>{
-                   console.log('Success. done',a)
-                   setTimeout( ()=>{
-                     hideCanvas('canibus')
-                   }  , 14000)
-                 }
+              , doneCalib
               , ()=>{ console.log('FAIL')  }
               )
             }
 
+            window.doneCalib = doneCalib
 
-      
+
+
         </script>
 
     </head>

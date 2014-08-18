@@ -13,7 +13,7 @@ import {
 from "makeProj2CamMap"
 
 export class ransacFundMatrixEstimate {
-  constructor(data, iterations = 400) {
+  constructor(data, iterations = 100) {
     this.prj2Cam = makeProj2CamMap(data, 128, 128)
     this.data = data
     this.sample1size = 3000
